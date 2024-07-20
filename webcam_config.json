@@ -1,7 +1,8 @@
 {
-    "028": {
+    "028": 
+    {
         "port": 9000,
-        "resolution": 7,
-        "fov": 0
+        "resolution": "720p",
+        "fov": "LINEAR"
     }
 }
