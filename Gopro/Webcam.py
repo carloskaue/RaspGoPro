@@ -1,5 +1,6 @@
 from __future__ import annotations
 import json
+from enum import IntEnum
 import enum
 import logging
 import multiprocessing as mp
@@ -14,11 +15,11 @@ class Webcam:
     BASE_IP = "172.2{}.1{}{}.51"
     BASE_ENDPOINT = "http://{ip}:8080/gopro/"
 
-    class WebcamResolution(enum.Enum):
+    class WebcamResolution(IntEnum):
         RES_1080P = 12
         RES_720p = 7
 
-    class WebcamFOV(enumerate):
+    class WebcamFOV(IntEnum):
         LINEAR    = 4
         NARROW    = 2
         SUPERVIEW = 3

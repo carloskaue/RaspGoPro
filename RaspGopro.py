@@ -15,7 +15,7 @@ async def main() -> None:
             print (serial)
             cam = GoProWebcamPlayer(serial, 9000)
             cam.open()
-            cam.play(resolution= 7, fov =4 )
+            cam.play(resolution=params["resolution"], fov=params["fov"] )
             input("Press enter to stop")
             cam.close()
 

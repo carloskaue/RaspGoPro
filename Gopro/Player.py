@@ -63,20 +63,20 @@ class Player:
 
         While the player is running, get a frame and display it
         """
+        print(self.url + "?overrun_nonfatal=1&fifo_size=50000000")
         self._vid = cv.VideoCapture(self.url + "?overrun_nonfatal=1&fifo_size=50000000", cv.CAP_FFMPEG)
         self._player_started.set()
         logging.info("Player started.")
-        cv.namedWindow("frame", cv.WINDOW_NORMAL)
         while not self._stop_player.is_set():
             ret, frame = self._vid.read()
             if ret:
-                height, width = frame.shape[:2]
-                height = int(height*REDUCTION)
-                width = int(width*REDUCTION)
-                imag = cv.resize(frame, (width, height))  
-                cv.imshow("frame", imag)
-
-           # cv.waitKey(1)  # Show for 1 millisecond
+                # height, width = frame.shape[:2]
+                # height = int(height*REDUCTION)
+                # width = int(width*REDUCTION)
+                # imag = cv.resize(frame, (width, height))  
+                # cv.imshow("frame", imag)
+                cv.imshow("frame", frame)
+            cv.waitKey(1)  # Show for 1 millisecond
         # After the loop release the cap object
         self._vid.release()
         # Destroy all the windows

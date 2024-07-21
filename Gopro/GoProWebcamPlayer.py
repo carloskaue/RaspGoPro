@@ -64,7 +64,7 @@ class GoProWebcamPlayer:
         """Enable the GoPro webcam."""
         self.webcam.enable()
 
-    def play(self, resolution: Optional[int] = None, fov: Optional[int] = None) -> None:
+    def play(self, resolution: Optional[str] = None, fov: Optional[str] = None) -> None:
         """Configure and start the GoPro Webcam. Then open and display the stream.
 
         Note that the FOV and Resolution param values come from the Open GoPro Spec:
@@ -74,7 +74,29 @@ class GoProWebcamPlayer:
             resolution (Optional[int]): Resolution for webcam stream. Defaults to None (will be assigned by GoPro).
             fov (Optional[int]): Field of view for webcam stream. Defaults to None (will be assigned by GoPro).
         """
-        self.webcam.start(self.port, resolution, fov)
+        self.resolution = None
+        self.fov  = None
+        match resolution.lower():
+            case "720p":
+                self.resolution = Webcam.WebcamResolution.RES_720p.value
+            case "1080p":
+                self.resolution = Webcam.WebcamResolution.RES_1080P.value
+            case _:
+                raise "ERROR Resolution"
+        match fov.upper():
+            case "LINEAR"    :
+                self.fov = Webcam.WebcamFOV.LINEAR.value
+            case "NARROW"    :
+                self.fov = Webcam.WebcamFOV.NARROW.value
+            case "SUPERVIEW" :
+                self.fov = Webcam.WebcamFOV.SUPERVIEW.value
+            case "WIDE"      :
+                self.fov = Webcam.WebcamFOV.WIDE.value
+            case _:
+                raise "ERROR FOV"
+
+
+        self.webcam.start(self.port, self.resolution, self.fov)
         self.player.start(GoProWebcamPlayer.STREAM_URL.format(port=self.port))
 
     def close(self) -> None:

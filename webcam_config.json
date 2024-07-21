@@ -3,6 +3,6 @@
     {
         "port": 9000,
         "resolution": "720p",
-        "fov": "LINEAR"
+        "fov": "WIDE"
     }
 }
