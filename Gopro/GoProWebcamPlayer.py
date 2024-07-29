@@ -33,7 +33,7 @@ class GoProWebcamPlayer:
             continue
         return port
     
-    def __init__(self, serial: str, port: Optional[int] = None) -> None:
+    def __init__(self, serial: str, port = 9000, resolution = "1080p", fov = "LINEAR") -> None:
         """Constructor
 
         Args:
@@ -45,8 +45,10 @@ class GoProWebcamPlayer:
             RuntimeError: The desired port is already used.
         """
         self.serial = serial
+        self.resolution = resolution
+        self.fov = fov
         self.webcam = Webcam(serial)
-        self.player = Player()
+        self.player = Player(self.serial)
         if port and port in GoProWebcamPlayer._used_ports:
             raise RuntimeError(f"Port {port} is already being used")
         self.port = port or GoProWebcamPlayer._get_free_port()
@@ -64,7 +66,7 @@ class GoProWebcamPlayer:
         """Enable the GoPro webcam."""
         self.webcam.enable()
 
-    def play(self, resolution: Optional[str] = None, fov: Optional[str] = None) -> None:
+    def play(self) -> None:
         """Configure and start the GoPro Webcam. Then open and display the stream.
 
         Note that the FOV and Resolution param values come from the Open GoPro Spec:
@@ -74,29 +76,29 @@ class GoProWebcamPlayer:
             resolution (Optional[int]): Resolution for webcam stream. Defaults to None (will be assigned by GoPro).
             fov (Optional[int]): Field of view for webcam stream. Defaults to None (will be assigned by GoPro).
         """
-        self.resolution = None
-        self.fov  = None
-        match resolution.lower():
+        self.__resolution_play = None
+        self.__fov_play  = None
+        match self.resolution.lower():
             case "720p":
-                self.resolution = Webcam.WebcamResolution.RES_720p.value
+                self.__resolution_play = Webcam.WebcamResolution.RES_720p.value
             case "1080p":
-                self.resolution = Webcam.WebcamResolution.RES_1080P.value
+                self.__resolution_play = Webcam.WebcamResolution.RES_1080P.value
             case _:
                 raise "ERROR Resolution"
-        match fov.upper():
+        match self.fov.upper():
             case "LINEAR"    :
-                self.fov = Webcam.WebcamFOV.LINEAR.value
+                self.__fov_play = Webcam.WebcamFOV.LINEAR.value
             case "NARROW"    :
-                self.fov = Webcam.WebcamFOV.NARROW.value
+                self.__fov_play = Webcam.WebcamFOV.NARROW.value
             case "SUPERVIEW" :
-                self.fov = Webcam.WebcamFOV.SUPERVIEW.value
+                self.__fov_play = Webcam.WebcamFOV.SUPERVIEW.value
             case "WIDE"      :
-                self.fov = Webcam.WebcamFOV.WIDE.value
+                self.__fov_play = Webcam.WebcamFOV.WIDE.value
             case _:
                 raise "ERROR FOV"
 
 
-        self.webcam.start(self.port, self.resolution, self.fov)
+        self.webcam.start(self.port, self.__resolution_play, self.__fov_play)
         self.player.start(GoProWebcamPlayer.STREAM_URL.format(port=self.port))
 
     def close(self) -> None:

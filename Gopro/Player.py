@@ -26,8 +26,9 @@ class Player:
     Note that each player runs in a separate process.
     """
 
-    def __init__(self) -> None:
+    def __init__(self, name:str) -> None:
         """Constructor"""
+        self._name = name
         self._vid: SupportsWebcam
         self._process = mp.Process(target=self._run, daemon=True)
         self._player_started = mp.Event()
@@ -70,12 +71,12 @@ class Player:
         while not self._stop_player.is_set():
             ret, frame = self._vid.read()
             if ret:
-                # height, width = frame.shape[:2]
-                # height = int(height*REDUCTION)
-                # width = int(width*REDUCTION)
-                # imag = cv.resize(frame, (width, height))  
-                # cv.imshow("frame", imag)
-                cv.imshow("frame", frame)
+                height, width = frame.shape[:2]
+                height = int(height*REDUCTION)
+                width = int(width*REDUCTION)
+                imag = cv.resize(frame, (width, height))  
+                cv.imshow(self._name, imag)
+                #cv.imshow("frame", frame)
             cv.waitKey(1)  # Show for 1 millisecond
         # After the loop release the cap object
         self._vid.release()

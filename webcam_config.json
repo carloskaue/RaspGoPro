@@ -1,8 +1,5 @@
 {
-    "028": 
-    {
-        "port": 9000,
-        "resolution": "720p",
-        "fov": "WIDE"
-    }
+    "resolution": "720p",
+    "fov": "WIDE",
+    "cam":{ "028":{"port":9000},"714":{"port":9001}}
 }
